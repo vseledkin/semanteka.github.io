@@ -113,6 +113,7 @@ body {
   position: fixed;
   z-index: 1;
   right: 1.25rem;
+  right: max(1.25rem, env(safe-area-inset-right));
   width: 132px;
   height: 52px;
   grid-template-columns: repeat(3, 1fr);
@@ -125,9 +126,11 @@ body {
 
 .theme-switch {
   top: 1.25rem;
+  top: max(1.25rem, env(safe-area-inset-top));
 }
 
 .zoom-toolbar {
+  bottom: 1.25rem;
   bottom: max(1.25rem, env(safe-area-inset-bottom));
   width: 188px;
   grid-template-columns: 40px 56px 40px 40px;
@@ -203,6 +206,8 @@ body {
 .zoom-toolbar button {
   position: relative;
   border-radius: 50%;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .theme-switch label:hover,
@@ -223,7 +228,6 @@ body {
   border: 0;
   background: transparent;
   cursor: pointer;
-  touch-action: manipulation;
 }
 
 .zoom-toolbar .toolbar-icon {
@@ -259,6 +263,21 @@ body {
   margin: 0;
   opacity: 0;
   cursor: pointer;
+}
+
+@media (any-pointer: coarse) {
+  .floating-toolbar {
+    height: 60px;
+  }
+
+  .theme-switch {
+    width: 156px;
+  }
+
+  .zoom-toolbar {
+    width: 216px;
+    grid-template-columns: 48px 60px 48px 48px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
