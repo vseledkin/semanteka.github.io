@@ -43,209 +43,38 @@
       });
     }
   </script>
-  <style>
-    @font-face {
-      font-family: "iA Writer Quattro S";
-      src: url("fonts/ia-writer-quattro-s.woff2") format("woff2");
-      font-style: normal;
-      font-weight: 100 900;
-      font-display: swap;
-    }
-
-    :root {
-      color-scheme: light dark;
-      --canvas: light-dark(#f4f1e9, #070d0e);
-      --surface-raised: light-dark(#ffffff, #233438);
-      --surface-soft: light-dark(#e4ecec, #18282c);
-      --ink: light-dark(#20342d, #eef4f4);
-      --ink-soft: light-dark(#556a6e, #9bb0b5);
-      --line: light-dark(#dbdfd5, #1c2d32);
-      --action: light-dark(#825d19, #d4af66);
-      --focus: var(--action);
-    }
-
-    :root[data-theme="light"] {
-      color-scheme: light;
-    }
-
-    :root[data-theme="dark"] {
-      color-scheme: dark;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      display: grid;
-      place-items: center;
-      min-height: 100vh;
-      min-height: 100dvh;
-      margin: 0;
-      padding: 4.5rem 1.25rem;
-      background: var(--canvas);
-      color: var(--ink);
-      font-family: "iA Writer Quattro S", system-ui, sans-serif;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(2.375rem, 8vw, 5rem);
-      font-weight: 400;
-      line-height: 1.05;
-    }
-
-    .wordmark-initial {
-      width: 0.84em;
-      height: 0.84em;
-      margin-right: 0.04em;
-      vertical-align: -0.08em;
-    }
-
-    p {
-      margin: 0;
-      color: light-dark(#45594f, #9bb0b5);
-      font-size: 1.125rem;
-      line-height: 1.6;
-    }
-
-    .theme-switch {
-      position: fixed;
-      top: 1.25rem;
-      right: 1.25rem;
-      width: 132px;
-      height: 52px;
-      grid-template-columns: repeat(3, 1fr);
-      padding: 5px 6px 7px;
-    }
-
-    .theme-switch:not([hidden]) {
-      display: grid;
-    }
-
-    .theme-switch-art {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
-
-    .theme-rim,
-    .theme-thumb {
-      filter: drop-shadow(0 2px 2px light-dark(rgb(0 0 0 / 20%), rgb(0 0 0 / 50%)));
-    }
-
-    .theme-track {
-      fill: var(--surface-soft);
-      stroke: var(--line);
-    }
-
-    .theme-thumb {
-      stroke: light-dark(#d0dede, #2d4850);
-      transition: transform 140ms ease;
-    }
-
-    .theme-icon {
-      fill: none;
-      stroke: var(--ink-soft);
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .theme-switch:has(#theme-light:checked) .theme-thumb {
-      transform: translateX(-40px);
-    }
-
-    .theme-switch:has(#theme-system:checked) .theme-thumb {
-      transform: translateX(40px);
-    }
-
-    .theme-switch:has(#theme-light:checked) .theme-icon-light,
-    .theme-switch:has(#theme-dark:checked) .theme-icon-dark,
-    .theme-switch:has(#theme-system:checked) .theme-icon-system {
-      stroke: var(--action);
-    }
-
-    .theme-switch label {
-      position: relative;
-      border-radius: 50%;
-    }
-
-    .theme-switch label:hover {
-      box-shadow: inset 0 0 0 1px var(--line);
-    }
-
-    .theme-switch label:has(:focus-visible) {
-      outline: 2px solid var(--focus);
-      outline-offset: -2px;
-    }
-
-    .theme-switch input {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      opacity: 0;
-      cursor: pointer;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .theme-thumb {
-        transition: none;
-      }
-    }
-
-    @media (forced-colors: active) {
-      .theme-track,
-      .theme-icon {
-        stroke: CanvasText;
-      }
-
-      .theme-thumb {
-        fill: Highlight;
-      }
-
-      .theme-switch:has(#theme-light:checked) .theme-icon-light,
-      .theme-switch:has(#theme-dark:checked) .theme-icon-dark,
-      .theme-switch:has(#theme-system:checked) .theme-icon-system {
-        stroke: HighlightText;
-      }
-
-      .theme-switch label:has(:focus-visible) {
-        outline-color: Highlight;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
+  <script src="plane.js" defer></script>
 </head>
 
 <body>
-  <div class="theme-switch" role="radiogroup" aria-label="Appearance" hidden>
-    <svg class="theme-switch-art" viewBox="0 0 132 52" aria-hidden="true">
+  <div class="floating-toolbar theme-switch" role="radiogroup" aria-label="Appearance" hidden>
+    <svg class="floating-toolbar-art" viewBox="0 0 132 52" aria-hidden="true">
       <defs>
-        <linearGradient id="theme-face" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color: var(--surface-raised)"></stop>
-          <stop offset="100%" style="stop-color: var(--surface-soft)"></stop>
+        <linearGradient id="toolbar-face" x2="0%" y2="100%">
+          <stop offset="0%"></stop>
+          <stop offset="100%"></stop>
         </linearGradient>
         <linearGradient id="theme-selection" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color: light-dark(#ffffff, #344b51)"></stop>
-          <stop offset="100%" style="stop-color: light-dark(#f8fafb, #233438)"></stop>
+          <stop offset="0%"></stop>
+          <stop offset="100%"></stop>
         </linearGradient>
+        <g id="toolbar-frame">
+          <rect class="toolbar-rim" x="2" y="2" height="46" rx="23" fill="url(#toolbar-face)"></rect>
+          <rect class="toolbar-track" x="7" y="7" height="36" rx="18"></rect>
+        </g>
       </defs>
-      <rect class="theme-rim" x="2" y="2" width="128" height="46" rx="23" fill="url(#theme-face)"></rect>
-      <rect class="theme-track" x="7" y="7" width="118" height="36" rx="18"></rect>
+      <use href="#toolbar-frame"></use>
       <circle class="theme-thumb" cx="66" cy="25" r="18" fill="url(#theme-selection)"></circle>
 
-      <g class="theme-icon theme-icon-light" transform="translate(14 13)">
+      <g class="toolbar-icon theme-icon-light" transform="translate(14 13)">
         <circle cx="12" cy="12" r="4"></circle>
         <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
       </g>
-      <g class="theme-icon theme-icon-dark" transform="translate(54 13)">
+      <g class="toolbar-icon theme-icon-dark" transform="translate(54 13)">
         <path d="M20.99 12.79A9 9 0 0 1 11.21 3a9 9 0 1 0 9.78 9.79Z"></path>
       </g>
-      <g class="theme-icon theme-icon-system" transform="translate(94 13)">
+      <g class="toolbar-icon theme-icon-system" transform="translate(94 13)">
         <rect x="2" y="3" width="20" height="14" rx="2"></rect>
         <path d="M12 17v4m-4 0h8"></path>
       </g>
@@ -260,10 +89,35 @@
       <input id="theme-system" type="radio" name="theme" value="system" aria-label="System" autocomplete="off" checked>
     </label>
   </div>
-  <main>
-    <h1 aria-label="Semanteka"><img class="wordmark-initial" src="semanteka-128.png" width="128" height="128"
-        alt="">emanteka</h1>
+  <main class="plane" tabindex="0" aria-labelledby="wordmark" aria-describedby="plane-instructions">
+    <h1 id="wordmark" class="wordmark" aria-label="Semanteka"><img class="wordmark-initial" src="semanteka-128.png"
+        width="128" height="128" alt="" draggable="false">emanteka</h1>
+    <p id="plane-instructions" class="visually-hidden">
+      Drag to pan. Scroll or pinch to zoom. Use the arrow keys to pan, plus or minus to zoom, and zero to reset.
+    </p>
   </main>
+  <div class="floating-toolbar zoom-toolbar" role="group" aria-label="Zoom controls" hidden>
+    <svg class="floating-toolbar-art" aria-hidden="true">
+      <use href="#toolbar-frame"></use>
+    </svg>
+    <button type="button" data-zoom="in" aria-label="Zoom in" title="Zoom in">
+      <svg class="toolbar-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 12h14m-7-7v14"></path>
+      </svg>
+    </button>
+    <output class="zoom-level" aria-label="Current zoom" aria-live="off">100%</output>
+    <button type="button" data-zoom="out" aria-label="Zoom out" title="Zoom out">
+      <svg class="toolbar-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 12h14"></path>
+      </svg>
+    </button>
+    <button type="button" data-zoom="reset" aria-label="Reset zoom and center" title="Reset zoom and center">
+      <svg class="toolbar-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3m0 8v3a2 2 0 0 1-2 2h-3m-8 0H5a2 2 0 0 1-2-2v-3"></path>
+        <circle cx="12" cy="12" r="3"></circle>
+      </svg>
+    </button>
+  </div>
 </body>
 
 </html>

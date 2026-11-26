@@ -1,0 +1,290 @@
+@font-face {
+  font-family: "iA Writer Quattro S";
+  src: url("fonts/ia-writer-quattro-s.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: light dark;
+  --canvas: light-dark(#f4f1e9, #070d0e);
+  --surface-raised: light-dark(#ffffff, #233438);
+  --surface-soft: light-dark(#e4ecec, #18282c);
+  --ink: light-dark(#20342d, #eef4f4);
+  --ink-soft: light-dark(#556a6e, #9bb0b5);
+  --line: light-dark(#dbdfd5, #1c2d32);
+  --action: light-dark(#825d19, #d4af66);
+  --focus: var(--action);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: "iA Writer Quattro S", system-ui, sans-serif;
+}
+
+.plane {
+  --grid-tile: 128px;
+  --minor-line: color-mix(in srgb, var(--line) 38%, transparent);
+  --major-line: color-mix(in srgb, var(--line) 78%, transparent);
+  /* Keep all four lines in one tile so fractional zoom cannot split them. */
+  --grid-stops:
+    var(--major-line) 0 1px, transparent 1px 25%,
+    var(--minor-line) 25% calc(25% + 1px), transparent calc(25% + 1px) 50%,
+    var(--minor-line) 50% calc(50% + 1px), transparent calc(50% + 1px) 75%,
+    var(--minor-line) 75% calc(75% + 1px), transparent calc(75% + 1px);
+
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  height: 100dvh;
+  overflow: clip;
+  overscroll-behavior: none;
+  touch-action: none;
+  cursor: grab;
+  background-image:
+    linear-gradient(to right, var(--grid-stops)),
+    linear-gradient(to bottom, var(--grid-stops));
+  background-position:
+    calc(50% + var(--grid-tile) / 2 + var(--grid-x, 0px))
+    calc(50% + var(--grid-tile) / 2 + var(--grid-y, 0px));
+  background-size: var(--grid-tile) var(--grid-tile);
+}
+
+.plane,
+.wordmark {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.plane:active {
+  cursor: grabbing;
+}
+
+.plane:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
+.plane[data-pointer-focus] {
+  outline: none;
+}
+
+.wordmark {
+  margin: 0;
+  font-size: clamp(2.375rem, 8vw, 5rem);
+  font-weight: 400;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+
+.wordmark-initial {
+  width: 0.84em;
+  height: 0.84em;
+  margin-right: 0.04em;
+  vertical-align: -0.08em;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.floating-toolbar {
+  position: fixed;
+  z-index: 1;
+  right: 1.25rem;
+  width: 132px;
+  height: 52px;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 5px 6px 7px;
+}
+
+.floating-toolbar:not([hidden]) {
+  display: grid;
+}
+
+.theme-switch {
+  top: 1.25rem;
+}
+
+.zoom-toolbar {
+  bottom: max(1.25rem, env(safe-area-inset-bottom));
+  width: 188px;
+  grid-template-columns: 40px 56px 40px 40px;
+}
+
+.floating-toolbar-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+#toolbar-face stop:first-child {
+  stop-color: var(--surface-raised);
+}
+
+#toolbar-face stop:last-child {
+  stop-color: var(--surface-soft);
+}
+
+#theme-selection stop:first-child {
+  stop-color: light-dark(#ffffff, #344b51);
+}
+
+#theme-selection stop:last-child {
+  stop-color: light-dark(#f8fafb, #233438);
+}
+
+.toolbar-rim,
+.theme-thumb {
+  filter: drop-shadow(0 2px 2px light-dark(rgb(0 0 0 / 20%), rgb(0 0 0 / 50%)));
+}
+
+.toolbar-rim {
+  width: calc(100% - 4px);
+}
+
+.toolbar-track {
+  width: calc(100% - 14px);
+  fill: var(--surface-soft);
+  stroke: var(--line);
+}
+
+.theme-thumb {
+  stroke: light-dark(#d0dede, #2d4850);
+  transition: transform 140ms ease;
+}
+
+.toolbar-icon {
+  fill: none;
+  stroke: var(--ink-soft);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.theme-switch:has(#theme-light:checked) .theme-thumb {
+  transform: translateX(-40px);
+}
+
+.theme-switch:has(#theme-system:checked) .theme-thumb {
+  transform: translateX(40px);
+}
+
+.theme-switch:has(#theme-light:checked) .theme-icon-light,
+.theme-switch:has(#theme-dark:checked) .theme-icon-dark,
+.theme-switch:has(#theme-system:checked) .theme-icon-system {
+  stroke: var(--action);
+}
+
+.theme-switch label,
+.zoom-toolbar button {
+  position: relative;
+  border-radius: 50%;
+}
+
+.theme-switch label:hover,
+.zoom-toolbar button:hover {
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.theme-switch label:has(:focus-visible),
+.zoom-toolbar button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
+.zoom-toolbar button {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.zoom-toolbar .toolbar-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.zoom-level {
+  position: relative;
+  align-self: center;
+  justify-self: stretch;
+  padding-block: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--action) 8%, var(--surface-soft));
+  color: var(--action);
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+  user-select: none;
+}
+
+.zoom-toolbar button:active .toolbar-icon {
+  stroke: var(--action);
+}
+
+.theme-switch input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-thumb {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .toolbar-track,
+  .toolbar-icon {
+    stroke: CanvasText;
+  }
+
+  .theme-thumb {
+    fill: Highlight;
+  }
+
+  .theme-switch:has(#theme-light:checked) .theme-icon-light,
+  .theme-switch:has(#theme-dark:checked) .theme-icon-dark,
+  .theme-switch:has(#theme-system:checked) .theme-icon-system {
+    stroke: HighlightText;
+  }
+
+  .theme-switch label:has(:focus-visible),
+  .zoom-toolbar button:focus-visible {
+    outline-color: Highlight;
+  }
+}
