@@ -55,7 +55,6 @@
     :root {
       color-scheme: light dark;
       --canvas: light-dark(#f4f1e9, #070d0e);
-      --surface: light-dark(#fffdf8, #0d1518);
       --surface-raised: light-dark(#ffffff, #233438);
       --surface-soft: light-dark(#e4ecec, #18282c);
       --ink: light-dark(#20342d, #eef4f4);
@@ -89,16 +88,8 @@
       font-family: "iA Writer Quattro S", system-ui, sans-serif;
     }
 
-    main {
-      width: min(100%, 42rem);
-      padding: clamp(1.5rem, 7vw, 4rem);
-      border: 1px solid var(--line);
-      border-radius: 1.25rem;
-      background: var(--surface);
-    }
-
     h1 {
-      margin: 0 0 1rem;
+      margin: 0;
       font-size: clamp(2.375rem, 8vw, 5rem);
       font-weight: 400;
       line-height: 1.05;
